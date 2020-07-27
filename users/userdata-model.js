@@ -2,7 +2,9 @@ const db = require("../database/dbConfig.js");
 
 module.exports = {
     findList,
+    findListById,
     findTodos,
+    findTodosById,
     addList,
     addTodo
 }
@@ -14,11 +16,23 @@ function findList(user_id) {
         .join('users', 'users.id', 'lists.user_id')
 }
 
+function findListById(id) {
+    return db('lists')
+        .where({id})
+        .select('lists.id', 'lists.listname', 'lists.user_id')
+}
+
 function findTodos(list_id) {
     return db('todo')
         .where({list_id})
         .select('todo.id', 'todo.todo', 'todo.list_id')
         .join('lists', 'lists.id', 'todo.list_id')
+}
+
+function findTodosById(id) {
+    return db('todo')
+        .where({id})
+        .select('todo.id', 'todo.todo', 'todo.list_id')
 }
 
 function findByListId(id) {

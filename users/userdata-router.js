@@ -17,11 +17,38 @@ router.get('/:id/lists', (req, res)=>{
         })
 })
 
-router.get('/:id/lists/:todoId', (req, res) => {
+router.get('/:id/lists/:listId', (req, res)=>{
+
+    const {listId} = req.params
+
+    UserData.findListById(listId)
+        .then(list =>{
+            res.status(200).json(list)
+        })
+        .catch(err =>{
+            res.status(500).json({message: err.message })
+        })
+})
+
+
+router.get('/:id/lists/:listId/todos', (req, res) => {
+
+    const {listId} = req.params
+
+    UserData.findTodos(listId)
+        .then(todo => {
+            res.status(200).json(todo)
+        })
+        .catch(err => {
+            res.status(500).json({message: err.message })
+        })
+})
+
+router.get('/:id/lists/:listId/todos/:todoId', (req, res) => {
 
     const {todoId} = req.params
 
-    UserData.findTodos(todoId)
+    UserData.findTodosById(todoId)
         .then(todo => {
             res.status(200).json(todo)
         })
