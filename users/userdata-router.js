@@ -92,4 +92,33 @@ router.post('/:id/lists/:list_id/todos' , (req, res) => {
         })
 })
 
+router.put('/:id/lists/:listId', (req, res)=>{
+
+    const {listId} = req.params
+    const changes = req.body
+
+    UserData.updateList(changes, listId)
+        .then(list => {
+            res.status(200).json(list)
+        })
+        .catch(err =>{
+            res.status(500).json({message: err.message })
+        })
+})
+
+router.put('/:id/lists/:listId/todos/:todoId', (req, res) => {
+
+    const {todoId} = req.params
+    const changes = req.body
+
+    UserData.updateTodo(changes, todoId)
+        .then(todo => {
+            res.status(200).json(todo)
+        })
+        .catch(err => {
+            res.status(500).json({message: err.message })
+        })
+})
+
+
 module.exports = router;
