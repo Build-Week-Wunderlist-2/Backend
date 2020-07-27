@@ -139,7 +139,7 @@ router.delete('/:id/lists/:listId', (req, res) => {
 router.delete('/:id/lists/:listId/todos/:todoId', (req, res) => {
     const { todoId } = req.params;
 
-    UserData.removeList(todoId)
+    UserData.removeTodo(todoId)
     .then(deleted => {
       if (deleted) {
         res.json({ removed: deleted });
