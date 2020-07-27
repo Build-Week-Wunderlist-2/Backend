@@ -27,7 +27,7 @@ function findListById(id) {
 function findTodos(list_id) {
     return db('todo')
         .where({list_id})
-        .select('todo.id', 'todo.todo', 'todo.list_id', 'todos.completed')
+        .select('todo.id', 'todo.todo', 'todo.list_id', 'todo.completed')
         .join('lists', 'lists.id', 'todo.list_id')
 }
 
