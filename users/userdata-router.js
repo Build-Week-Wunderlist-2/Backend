@@ -134,6 +134,22 @@ router.delete('/:id/lists/:listId', (req, res) => {
     .catch(err => {
       res.status(500).json({ message: err.message });
     });
+});
+
+router.delete('/:id/lists/:listId/todos/:todoId', (req, res) => {
+    const { todoId } = req.params;
+
+    UserData.removeList(todoId)
+    .then(deleted => {
+      if (deleted) {
+        res.json({ removed: deleted });
+      } else {
+        res.status(404).json({ message: 'Could not find a todo item with that ID' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: err.message });
+    });
   });
 
 
