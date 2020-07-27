@@ -8,7 +8,9 @@ module.exports = {
     addList,
     addTodo,
     updateList,
-    updateTodo
+    updateTodo,
+    removeList,
+    removeTodo
 }
 
 function findList(user_id) {
@@ -80,5 +82,31 @@ function updateTodo(changes, id) {
         .update(changes)
         .then(() => {
             return findByTodoId(id)
+        })
+}
+
+function removeList(id) {
+    let toBeDeleted = findByListId(id).then((item) => {
+        return item
+    })
+
+    return db("lists")
+        .where({id})
+        .del()
+        .then(() => {
+            return toBeDeleted
+        })
+}
+
+function removeTodo(id) {
+    let toBeDeleted = findByTodoId(id).then((item) => {
+        return item
+    })
+
+    return db("todo")
+        .where({id})
+        .del()
+        .then(() => {
+            return toBeDeleted
         })
 }
