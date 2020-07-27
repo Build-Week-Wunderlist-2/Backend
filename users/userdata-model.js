@@ -6,7 +6,9 @@ module.exports = {
     findTodos,
     findTodosById,
     addList,
-    addTodo
+    addTodo,
+    updateList,
+    updateTodo
 }
 
 function findList(user_id) {
@@ -60,5 +62,23 @@ function addTodo(todo) {
         .insert(todo, 'id')
         .then((ids) => {
             return findByTodoId(ids)
+        })
+}
+
+function updateList(changes, id) {
+    return db('lists')
+        .where({id})
+        .update(changes)
+        .then(() => {
+            return findByListId(id)
+        })
+}
+
+function updateTodo(changes, id) {
+    return db('todo')
+        .where({id})
+        .update(changes)
+        .then(() => {
+            return findByTodoId(id)
         })
 }

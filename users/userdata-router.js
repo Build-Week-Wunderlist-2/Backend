@@ -75,7 +75,7 @@ router.post('/:id/lists', (req, res) => {
         })
 })
 
-router.post('/:id/lists/:list_id' , (req, res) => {
+router.post('/:id/lists/:list_id/todos' , (req, res) => {
     const {list_id} = req.params
 
     const bodyData = {
