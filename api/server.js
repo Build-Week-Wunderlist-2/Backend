@@ -17,4 +17,8 @@ server.use('/api/', authRouter);
 server.use('/api/lists', authenticate, listRouter);
 server.use('/api/todo', authenticate, todoRouter)
 
+server.get('/', (req, res) => {
+    res.send(`<h2>Welcome to the Wunderlist 2.0 backend!</h2>`);
+  });
+
 module.exports = server;
