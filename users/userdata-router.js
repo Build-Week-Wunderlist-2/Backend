@@ -17,11 +17,12 @@ router.get('/:id/lists', (req, res)=>{
         })
 })
 
-router.get('/:id/lists/:listId', (req, res)=>{
+router.get('/:id/lists/:listId', validateList, (req, res)=>{
 
+    const {id} = req.params
     const {listId} = req.params
 
-    UserData.findListById(listId)
+    UserData.findListById(listId, id)
         .then(list =>{
             res.status(200).json(list)
         })
@@ -31,7 +32,7 @@ router.get('/:id/lists/:listId', (req, res)=>{
 })
 
 
-router.get('/:id/lists/:listId/todos', (req, res) => {
+router.get('/:id/lists/:listId/todos', validateList, (req, res) => {
 
     const {listId} = req.params
 
@@ -44,12 +45,14 @@ router.get('/:id/lists/:listId/todos', (req, res) => {
         })
 })
 
-router.get('/:id/lists/:listId/todos/:todoId', (req, res) => {
+router.get('/:id/lists/:listId/todos/:todoId', validateList, (req, res) => {
 
     const {todoId} = req.params
+    const {listId} = req.params
 
-    UserData.findTodosById(todoId)
+    UserData.findTodosById(todoId, listId)
         .then(todo => {
+            console.log('from get' + todo)
             res.status(200).json(todo)
         })
         .catch(err => {
@@ -75,12 +78,12 @@ router.post('/:id/lists', (req, res) => {
         })
 })
 
-router.post('/:id/lists/:list_id/todos' , (req, res) => {
-    const {list_id} = req.params
+router.post('/:id/lists/:listId/todos', validateList, (req, res) => {
+    const {listId} = req.params
 
     const bodyData = {
         todo: req.body.todo,
-        list_id: list_id
+        list_id: listId
     }
 
     UserData.addTodo(bodyData)
@@ -92,7 +95,7 @@ router.post('/:id/lists/:list_id/todos' , (req, res) => {
         })
 })
 
-router.put('/:id/lists/:listId', (req, res)=>{
+router.put('/:id/lists/:listId', validateList, (req, res)=>{
 
     const {listId} = req.params
     const changes = req.body
@@ -106,7 +109,7 @@ router.put('/:id/lists/:listId', (req, res)=>{
         })
 })
 
-router.put('/:id/lists/:listId/todos/:todoId', (req, res) => {
+router.put('/:id/lists/:listId/todos/:todoId', validateList, (req, res) => {
 
     const {todoId} = req.params
     const changes = req.body
@@ -120,7 +123,7 @@ router.put('/:id/lists/:listId/todos/:todoId', (req, res) => {
         })
 })
 
-router.delete('/:id/lists/:listId', (req, res) => {
+router.delete('/:id/lists/:listId', validateList, (req, res) => {
     const { listId } = req.params;
 
     UserData.removeList(listId)
@@ -136,7 +139,7 @@ router.delete('/:id/lists/:listId', (req, res) => {
     });
 });
 
-router.delete('/:id/lists/:listId/todos/:todoId', (req, res) => {
+router.delete('/:id/lists/:listId/todos/:todoId', validateList, (req, res) => {
     const { todoId } = req.params;
 
     UserData.removeTodo(todoId)
@@ -152,5 +155,41 @@ router.delete('/:id/lists/:listId/todos/:todoId', (req, res) => {
     });
 });
 
+async function validateList(req, res, next) {
+    const {listId} = req.params
+    const {id} = req.params
+
+    UserData.findListById(listId, id).then(list => {
+        if (list.length <= 0) {
+            res.status(400).json({message: "The list does not exist"})
+        }
+
+        else {
+            next();
+        }
+    })
+    .catch(err => {
+        console.log(err)
+    })
+
+}
+
+async function validateTodo(req, res, next) {
+    const {todoId} = req.params
+    const {id} = req.params
+    await UserData.findTodosById(todoId, id).then(todo => {
+        console.log(todo)
+        if (todo.length <= 0) {
+            res.status(400).json({message: "The todo item does not exist"})
+        }
+
+        else {
+            next();
+        }
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
 
 module.exports = router;
