@@ -45,7 +45,7 @@ router.get('/:id/lists/:listId/todos', validateList, (req, res) => {
         })
 })
 
-router.get('/:id/lists/:listId/todos/:todoId', validateList, (req, res) => {
+router.get('/:id/lists/:listId/todos/:todoId', validateList, validateTodo, (req, res) => {
 
     const {todoId} = req.params
     const {listId} = req.params
@@ -109,7 +109,7 @@ router.put('/:id/lists/:listId', validateList, (req, res)=>{
         })
 })
 
-router.put('/:id/lists/:listId/todos/:todoId', validateList, (req, res) => {
+router.put('/:id/lists/:listId/todos/:todoId', validateList, validateTodo, (req, res) => {
 
     const {todoId} = req.params
     const changes = req.body
@@ -139,7 +139,7 @@ router.delete('/:id/lists/:listId', validateList, (req, res) => {
     });
 });
 
-router.delete('/:id/lists/:listId/todos/:todoId', validateList, (req, res) => {
+router.delete('/:id/lists/:listId/todos/:todoId', validateList, validateTodo, (req, res) => {
     const { todoId } = req.params;
 
     UserData.removeTodo(todoId)
@@ -176,8 +176,8 @@ async function validateList(req, res, next) {
 
 async function validateTodo(req, res, next) {
     const {todoId} = req.params
-    const {id} = req.params
-    await UserData.findTodosById(todoId, id).then(todo => {
+    const {listId} = req.params
+    UserData.findTodosById(todoId, listId).then(todo => {
         console.log(todo)
         if (todo.length <= 0) {
             res.status(400).json({message: "The todo item does not exist"})
