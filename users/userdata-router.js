@@ -178,7 +178,6 @@ async function validateTodo(req, res, next) {
     const {todoId} = req.params
     const {listId} = req.params
     UserData.findTodosById(todoId, listId).then(todo => {
-        console.log(todo)
         if (todo.length <= 0) {
             res.status(400).json({message: "The todo item does not exist"})
         }
