@@ -23,3 +23,7 @@ Deployed at https://wunderlist2backend.herokuapp.com/
 | PUT  | /api/users/:userid/lists/:listid/todos/:todoid  | Yes  | Update the completion status of the task (todo item) with the id of :todoid for an user with the id of :userid in the list with the id of :listid, <h5> Post request body example </h5> <h4>{ completed: 1 } </h3> <h5> Response body example </h4> <h4> { </br> "id":1, </br> "todo": "Edited Todo", </br> "list_id": 1, </br> "completed": 1 </br> } </h4> | 
 | DELETE  | /api/users/:userid/lists/:listid  | Yes  | Delete a todo list with the id of :listid for an user with the id of :userid, <i> will delete all the todo items associated with the list id </i> <h5> Response body example </h5> <h4> removed { </br> "id":1, </br> "listname": "Edited List", </br> "user_id": 1 </br> } </h4> | 
 | DELETE  | /api/users/:userid/lists/:listid/todos/:todoid  | Yes  | Delete a task (todo item) with the id of :todoid for an user with the id of :userid in the list with the id of :listid, <h5> Response body example </h4> <h4> removed { </br> "id":1, </br> "todo": "Edited Todo", </br> "list_id": 1, </br> completed: 0 </br> } </h4> | 
+
+# Testing
+
+Just install dependencies and enter "npm run test" in the terminal, tests are made in the test database
