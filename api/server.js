@@ -23,4 +23,8 @@ server.get('/', (req, res) => {
     res.send(`<h2>Welcome to the Wunderlist 2.0 backend!</h2>`);
   });
 
+server.get('/api', (req, res) => {
+  res.status(200).json({message: "Welcome to Wunderlist 2.0!", name: 'Wunderlist 2.0'})
+})
+
 module.exports = server;
