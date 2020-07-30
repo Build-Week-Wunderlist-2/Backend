@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const Users = require("../users/users-model");
 
-router.post("/register", (req, res) => {
+router.post("/register", validateUser, (req, res) => {
   let creds = req.body;
   const rounds = process.env.HASH_ROUNDS || 4;
 
@@ -23,7 +23,7 @@ router.post("/register", (req, res) => {
       });
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", validateUser, (req, res) => {
   const { username, password } = req.body;
 
   Users.findBy({ username })
@@ -33,7 +33,7 @@ router.post("/login", (req, res) => {
           if (user && bcryptjs.compareSync(password, user.password)) {
               const token = createToken(user);
 
-              res.status(200).json({ message: `Welcome ${user.username}!`, token: token });
+              res.status(200).json({ message: `Welcome ${user.username}!`, token: token, id: user.id });
           } else {
               res.status(401).json({ message: "Invalid credentials" });
           }
@@ -42,6 +42,24 @@ router.post("/login", (req, res) => {
           res.status(500).json({ error: error.message });
       });
 });
+
+function validateUser(req, res, next) {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    if ((username.length === 0 )) {
+        res.status(400).json({message: "Please provide a username"})
+    }
+
+    else if ((password.length === 0)) {
+        res.status(400).json({message: "Please provide a password"})
+    }
+
+    else {
+        next();
+    }
+
+}
 
 function createToken(user) {
   const payload = {
